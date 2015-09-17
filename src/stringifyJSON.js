@@ -12,9 +12,8 @@ var stringifyJSON = function(obj) {
   } else if (obj === null) {
     return 'null'; //null can be stringified
   } else if (typeof(obj) === 'object') {
+      
     if (Array.isArray(obj)) { // THIS SECTION IS FOR RECURSIVELY STRINGIFYING ARRAYS
-      // get first item of array before it is removed
-      var firstItem = obj[0];
 
       // base case for arrays. if array.length is zero, end recursion
       if (obj.length === 0) {
@@ -31,14 +30,14 @@ var stringifyJSON = function(obj) {
         }
       } else {
         // remove first element of array
-        obj.shift();
+        
         if (arguments[1] === undefined) {
           // if second argument is undefined, then this is first iteration
           // add an opening bracket at the beginning
-          return ('[' + stringifyJSON(firstItem) + stringifyJSON(obj, 1));
+          return ('[' + stringifyJSON(obj.shift()) + stringifyJSON(obj, 1));
         } else {
           // for middle iterations add commas in the beginning
-          (',' + stringifyJSON(firstItem) + stringifyJSON(obj, 1));
+          return (',' + stringifyJSON(obj.shift()) + stringifyJSON(obj, 1));
         }
       }
     } else { // THIS SECTION IS FOR RECURSIVELY STRINGIFYING OBJECTS
@@ -46,7 +45,7 @@ var stringifyJSON = function(obj) {
       // taking only the first element
       var firstKey = Object.keys(obj)[0];
       // get value of the first property of object
-      var firstValue = obj[firstValue];
+      var firstValue = obj[firstKey];
 
       // much like arrays, check if there are still keys in object
       if (Object.keys(obj).length === 0) {
@@ -61,17 +60,17 @@ var stringifyJSON = function(obj) {
       } else {
         delete obj[firstKey];
         if (arguments[1] === undefined) {
-          if (firstValue === undefined || typeof(firstValue) === 'function') {
-            return ('{' + stringifyJSON(obj, 1));
-          } else {
-            return ('{' + stringifyJSON(firstKey) + ':' + stringifyJSON(firstValue) + stringifyJSON(obj));
-          }
+            if (firstValue === undefined || typeof(firstValue) === 'function') {
+                return ('{' + stringifyJSON(obj, 1));
+            } else {
+                return ('{' + stringifyJSON(firstKey) + ':' + stringifyJSON(firstValue) + stringifyJSON(obj, 1));
+            }
         } else {
-          if (firstValue === undefined || typeof(firstValue) === 'function') {
-            return (stringifyJSON(obj, 1));
-          } else {
-            return (',' + stringifyJSON(firstKey) + ':' + stringifyJSON(firstValue) + stringifyJSON(obj));
-          }
+            if (firstValue === undefined || typeof(firstValue) === 'function') {
+                return ('' + stringifyJSON(obj, 1));
+            } else {
+                return (',' + stringifyJSON(firstKey) + ':' + stringifyJSON(firstValue) + stringifyJSON(obj, 1));
+            }
         }
       }
     }
