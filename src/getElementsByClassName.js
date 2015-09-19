@@ -17,13 +17,15 @@ var getElementsByClassName = function(className) {
     return bool;
   };
 
-  // 
+  // pushes an element into elementsArray if it passes the checkClass test
   var checkElement = function(node) {
     if (checkClass(node, className)) {
       elementsArray.push(node);
     }
   };
 
+  // push all elements that passes checkClass test into elementsArray
+  // including childNodes, and the childNodes' childNodes... RECURSION MAN!
   var getElements = function(node) {
     checkElement(node);
     each(node.childNodes, function(node) {
